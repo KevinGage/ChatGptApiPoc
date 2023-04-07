@@ -15,7 +15,8 @@ export default function Home() {
   const [chatTokens, setChatTokens] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  async function chat() {
+  async function chat(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     const messages: ChatMessageType[] = [...messageHistory];
 
     messages.push({ role: "user", content: prompt });
@@ -62,12 +63,14 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Chat</h1>
       <div className="p-2">
-        <form>
-          <h2>Settings</h2>
+        <div className="bg-slate-50 text-slate-700 text-lg rounded-md my-5 p-2">
+          <h2 className="font-extrabold text-xl mb-2">Settings</h2>
           <div>
-            <label htmlFor="temperature">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="temperature"
+            >
               Temperature (Higher gets more random results)
             </label>
             <input
@@ -82,8 +85,14 @@ export default function Home() {
             />
           </div>
           <div>
-            <label htmlFor="behaviour">Assistant behaviour</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="behaviour"
+            >
+              Assistant behaviour
+            </label>
             <input
+              className="shadow bg-white border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               id="behaviour"
               name="behaviour"
@@ -92,9 +101,20 @@ export default function Home() {
               onChange={(e) => setAssistantBehaviour(e.target.value)}
             />
           </div>
+        </div>
+        <form
+          className="bg-slate-50 text-slate-700 text-lg rounded-md my-5 p-2"
+          onSubmit={chat}
+        >
           <div>
-            <label htmlFor="prompt">Prompt</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="prompt"
+            >
+              Prompt
+            </label>
             <input
+              className="shadow bg-white border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               id="prompt"
               name="prompt"
@@ -103,25 +123,27 @@ export default function Home() {
               onChange={(e) => setPrompt(e.target.value)}
             />
           </div>
+          <ChatPane messages={messageHistory} />
+          {isLoading && <Waiting />}
+          <button
+            className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg p-2 dark:bg-blue-600 dark:hover:bg-blue-700"
+            type="submit"
+          >
+            Send
+          </button>
+          <button
+            className="text-white bg-red-700 hover:bg-red-800 rounded-lg p-2 m-2 dark:bg-red-600 dark:hover:bg-red-700"
+            onClick={clearHistory}
+          >
+            Clear
+          </button>
         </form>
-        <ChatPane messages={messageHistory} />
-        {isLoading && <Waiting />}
-        <button
-          className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg p-2 m-2 dark:bg-blue-600 dark:hover:bg-blue-700"
-          onClick={chat}
-        >
-          Send
-        </button>
-        <button
-          className="text-white bg-red-700 hover:bg-red-800 rounded-lg p-2 m-2 dark:bg-red-600 dark:hover:bg-red-700"
-          onClick={clearHistory}
-        >
-          Clear
-        </button>
-        <h2>Chat Total Cost</h2>
-        <p>Tokens: {chatTokens}</p>
-        {/* gpt-3.5-turbo	$0.002 / 1K tokens */}
-        <p>${(chatTokens * 0.002) / 1000}</p>
+        <div className="bg-slate-50 text-slate-700 text-lg rounded-md my-5 p-2">
+          <h2 className="font-extrabold text-xl mb-2">Chat Total Cost</h2>
+          <p>Tokens: {chatTokens}</p>
+          {/* gpt-3.5-turbo	$0.002 / 1K tokens */}
+          <p>${(chatTokens * 0.002) / 1000}</p>
+        </div>
       </div>
     </main>
   );
