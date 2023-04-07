@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChatRequestType, ChatMessageType } from "@/types/ChatRequestType";
 import ChatPane from "@/components/ChatPane";
+import Waiting from "@/components/Waiting";
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>("");
@@ -12,6 +13,7 @@ export default function Home() {
   const [temperature, setTemperature] = useState<number>(3);
   const [messageHistory, setMessageHistory] = useState<ChatMessageType[]>([]);
   const [chatTokens, setChatTokens] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function chat() {
     const messages: ChatMessageType[] = [...messageHistory];
@@ -24,6 +26,8 @@ export default function Home() {
       temperature: temperature / 10,
       max_tokens: 2500,
     };
+
+    setIsLoading(true);
 
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -39,6 +43,8 @@ export default function Home() {
     const { usage, choices } = data;
 
     setChatTokens((chatTokens) => chatTokens + usage.total_tokens);
+
+    setIsLoading(false);
 
     setMessageHistory([
       ...messages,
@@ -92,6 +98,7 @@ export default function Home() {
         />
       </form>
       <ChatPane messages={messageHistory} />
+      {isLoading && <Waiting />}
       <button onClick={chat}>Send</button>
       <button onClick={clearHistory}>Clear</button>
       <h2>Cost</h2>
