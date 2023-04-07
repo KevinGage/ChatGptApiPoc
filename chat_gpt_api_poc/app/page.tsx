@@ -14,6 +14,7 @@ export default function Home() {
   async function chat() {
     setChatHistory((chatHistory) => [...chatHistory, prompt]);
 
+    // TODO: Add chat history to prompt for more context
     const chatRequest: ChatRequestType = {
       system: assistantBehaviour,
       prompt: prompt,
@@ -34,10 +35,14 @@ export default function Home() {
 
     const { usage, choices } = data;
 
+    // gpt-3.5-turbo	$0.002 / 1K tokens
+    const tokenDollarCost = (usage.total_tokens * 0.002) / 1000;
+
     setChatHistory((chatHistory) => [
       ...chatHistory,
       choices[0].message.content,
       `Total tokens: ${usage.total_tokens}`,
+      `Dollar cost: $${tokenDollarCost}`,
     ]);
   }
 
