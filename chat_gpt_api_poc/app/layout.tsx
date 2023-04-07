@@ -1,5 +1,5 @@
 import "./globals.css";
-import Nav from "@/componenets/Nav";
+import Nav from "@/components/Nav";
 
 export const metadata = {
   title: "ChatGpt Api Poc",
