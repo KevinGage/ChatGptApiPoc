@@ -6,7 +6,7 @@ export default function Nav() {
       <ul>
         <li>
           <Link href="/">Chat</Link>
-          <Link href="/tokens">Tokens</Link>
+          <Link href="/images">Images</Link>
         </li>
       </ul>
     </nav>
