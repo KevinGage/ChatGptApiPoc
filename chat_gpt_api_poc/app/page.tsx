@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChatRequestType, ChatMessageType } from "@/types/ChatRequestType";
+import ChatPane from "@/components/ChatPane";
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>("");
@@ -90,13 +91,9 @@ export default function Home() {
           onChange={(e) => setPrompt(e.target.value)}
         />
       </form>
+      <ChatPane messages={messageHistory} />
       <button onClick={chat}>Send</button>
       <button onClick={clearHistory}>Clear</button>
-      <ul>
-        {messageHistory.map((message, i) => (
-          <li key={i}>{message.content}</li>
-        ))}
-      </ul>
       <h2>Cost</h2>
       <p>Tokens: {chatTokens}</p>
       {/* gpt-3.5-turbo	$0.002 / 1K tokens */}
