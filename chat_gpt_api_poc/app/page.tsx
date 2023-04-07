@@ -5,14 +5,17 @@ import { ChatRequestType } from "@/types/ChatRequestType";
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>("");
+  const [assistantBehaviour, setAssistantBehaviour] = useState<string>(
+    "You are a helpful assistant."
+  );
   const [temperature, setTemperature] = useState<number>(3);
   const [chatHistory, setChatHistory] = useState<string[]>([]);
 
   async function chat() {
     setChatHistory((chatHistory) => [...chatHistory, prompt]);
 
-    // TODO: do type checking on user input
     const chatRequest: ChatRequestType = {
+      system: assistantBehaviour,
       prompt: prompt,
       temperature: temperature / 10,
       max_tokens: 2500,
@@ -56,6 +59,16 @@ export default function Home() {
           max={20}
           step={1}
         />
+        <label htmlFor="behaviour">Assistant behaviour</label>
+        <input
+          type="text"
+          id="behaviour"
+          name="behaviour"
+          placeholder="Assistant behaviour"
+          value={assistantBehaviour}
+          onChange={(e) => setAssistantBehaviour(e.target.value)}
+        />
+        <br />
         <input
           type="text"
           id="prompt"
