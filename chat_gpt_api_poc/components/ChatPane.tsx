@@ -7,7 +7,7 @@ export default function ChatPane({
   messages: ChatMessageType[];
 }) {
   return (
-    <div>
+    <div className="py-2 flex-col">
       {messages.map((message, index) => (
         <ChatMessage
           key={index}

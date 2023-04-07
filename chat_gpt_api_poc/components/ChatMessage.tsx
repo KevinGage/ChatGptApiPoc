@@ -4,7 +4,9 @@ export default function ChatMessage({ role, content }: ChatMessageType) {
   return (
     <div
       className={
-        role === "user" ? "bg-black text-white" : "bg-white text-black"
+        role === "user"
+          ? "bg-green-600 text-white mr-10 my-1 p-2 rounded-md"
+          : "bg-cyan-400 text-black ml-10 my-1 p-2 rounded-md"
       }
     >
       {content}
