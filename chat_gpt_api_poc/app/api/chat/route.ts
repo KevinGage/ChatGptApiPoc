@@ -12,21 +12,31 @@ const openai = new OpenAIApi(configuration);
 export async function POST(request: Request) {
   const req = await request.json();
 
+  // console.log(JSON.stringify(req));
+
   // desctructure system, prompt, temperature, and max_tokens from req
-  const { system, prompt, temperature, max_tokens } = req;
+  const { system, messages, temperature, max_tokens } = req;
+
+  console.log("messages to send");
+  console.log(messages);
+
+  // prepend the system message to define the context
+  messages.unshift({ role: "system", content: system });
 
   // make a request to the OpenAI API
   const completion = await openai.createChatCompletion({
     model: process.env.OPENAI_API_MODEL,
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: prompt },
-    ],
+    // messages: [
+    //   { role: "system", content: system },
+    //   { role: "user", content: prompt },
+    //   { role: "assistant", content: reply },
+    // ],
+    messages: messages,
     temperature: temperature,
     max_tokens: max_tokens,
   });
 
-  // console.log(completion);
+  console.log("completion");
   console.log(completion.data);
   console.log(completion.data.choices[0].message);
 

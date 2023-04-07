@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChatRequestType } from "@/types/ChatRequestType";
+import { ChatRequestType, ChatMessageType } from "@/types/ChatRequestType";
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>("");
@@ -9,15 +9,17 @@ export default function Home() {
     "You are a helpful assistant."
   );
   const [temperature, setTemperature] = useState<number>(3);
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
+  const [messageHistory, setMessageHistory] = useState<ChatMessageType[]>([]);
+  const [chatTokens, setChatTokens] = useState<number>(0);
 
   async function chat() {
-    setChatHistory((chatHistory) => [...chatHistory, prompt]);
+    const messages: ChatMessageType[] = [...messageHistory];
 
-    // TODO: Add chat history to prompt for more context
+    messages.push({ role: "user", content: prompt });
+
     const chatRequest: ChatRequestType = {
       system: assistantBehaviour,
-      prompt: prompt,
+      messages: messages,
       temperature: temperature / 10,
       max_tokens: 2500,
     };
@@ -35,15 +37,20 @@ export default function Home() {
 
     const { usage, choices } = data;
 
-    // gpt-3.5-turbo	$0.002 / 1K tokens
-    const tokenDollarCost = (usage.total_tokens * 0.002) / 1000;
+    setChatTokens((chatTokens) => chatTokens + usage.total_tokens);
 
-    setChatHistory((chatHistory) => [
-      ...chatHistory,
-      choices[0].message.content,
-      `Total tokens: ${usage.total_tokens}`,
-      `Dollar cost: $${tokenDollarCost}`,
+    setMessageHistory([
+      ...messages,
+      {
+        role: "assistant",
+        content: choices[0].message.content,
+      },
     ]);
+  }
+
+  function clearHistory() {
+    setMessageHistory([]);
+    setChatTokens(0);
   }
 
   return (
@@ -84,12 +91,16 @@ export default function Home() {
         />
       </form>
       <button onClick={chat}>Send</button>
-      <button onClick={() => setChatHistory([])}>Clear</button>
+      <button onClick={clearHistory}>Clear</button>
       <ul>
-        {chatHistory.map((chatMessage) => (
-          <li>{chatMessage}</li>
+        {messageHistory.map((message, i) => (
+          <li key={i}>{message.content}</li>
         ))}
       </ul>
+      <h2>Cost</h2>
+      <p>Tokens: {chatTokens}</p>
+      {/* gpt-3.5-turbo	$0.002 / 1K tokens */}
+      <p>${(chatTokens * 0.002) / 1000}</p>
     </main>
   );
 }
