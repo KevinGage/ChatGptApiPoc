@@ -8,14 +8,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 // Listen for POST requests to /api/chat
-// Expects a JSON body with a prompt property, temperature, and max_tokens
+// Expects a JSON body with a prompt property, and temperature
 export async function POST(request: Request) {
   const req = await request.json();
 
   // console.log(JSON.stringify(req));
 
-  // desctructure system, prompt, temperature, and max_tokens from req
-  const { system, messages, temperature, max_tokens } = req;
+  // desctructure system, prompt, and temperature from req
+  const { system, messages, temperature } = req;
 
   console.log("messages to send");
   console.log(messages);
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     // ],
     messages: messages,
     temperature: temperature,
-    max_tokens: max_tokens,
+    max_tokens: parseInt(process.env.OPENAI_API_MAX_TOKENS as string),
   });
 
   console.log("completion");

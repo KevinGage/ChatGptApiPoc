@@ -25,7 +25,6 @@ export default function Home() {
       system: assistantBehaviour,
       messages: messages,
       temperature: temperature / 10,
-      max_tokens: 2500,
     };
 
     setIsLoading(true);
