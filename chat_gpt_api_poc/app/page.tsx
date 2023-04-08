@@ -105,6 +105,7 @@ export default function Home() {
           className="bg-slate-50 text-slate-700 text-lg rounded-md my-5 p-2"
           onSubmit={chat}
         >
+          <ChatPane messages={messageHistory} />
           <div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -122,7 +123,6 @@ export default function Home() {
               onChange={(e) => setPrompt(e.target.value)}
             />
           </div>
-          <ChatPane messages={messageHistory} />
           {isLoading && <Waiting />}
           <button
             className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg p-2 dark:bg-blue-600 dark:hover:bg-blue-700"
