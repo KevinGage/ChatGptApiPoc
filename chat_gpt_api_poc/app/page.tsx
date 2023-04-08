@@ -62,8 +62,8 @@ export default function Home() {
 
   return (
     <main>
-      <div className="p-2">
-        <div className="bg-slate-50 text-slate-700 text-lg rounded-md my-5 p-2">
+      <div className="px-5">
+        <div className="bg-slate-50 text-slate-700 text-lg rounded-md mt-2 mb-5 p-2">
           <h2 className="font-extrabold text-xl mb-2">Settings</h2>
           <div>
             <label
